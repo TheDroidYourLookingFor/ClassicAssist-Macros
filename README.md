@@ -21,7 +21,7 @@ Scripts for ClassicAssist, an Ultima Online Assistant.
 * [**Skill**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/Skill) -
  Skill Trainers, Assistants
 
-* [**UOS**](https://github.com/Reetus/ClassicAssist) -
+* [**ClassicAssist**](https://github.com/Reetus/ClassicAssist) -
  Documentation and ClassicAssist Binary!
 
 ## Other Resources and Links
