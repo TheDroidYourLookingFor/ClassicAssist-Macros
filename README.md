@@ -4,24 +4,24 @@ Scripts for ClassicAssist, an Ultima Online Assistant.
 
 ## Contents Include
 
-* [**General**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/general) -
+* [**General**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/General) -
  Miscellaneous, Useful, Interesting
 
-* [**Organize**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/organize) -
+* [**Organize**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/Organize) -
  Items, Resources, Loot
 
-* [**Profiles**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/profiles) - Import profiles into UOSteam for a quick start
+* [**Profiles**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/Profiles) - Import profiles into ClassicAssist for a quick start
 
-* [**PvM+PvP**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/pvmpvp) -
+* [**PvM+PvP**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/PvX) -
  Defense, Offense, Hunting
 
-* [**Resource**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/resource) -
+* [**Resource**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/Resource) -
  Crafting, Resource Gathering
 
-* [**Skill**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/skill) -
+* [**Skill**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/Skill) -
  Skill Trainers, Assistants
 
-* [**UOS**](https://github.com/Reetus/ClassicAssist) -
+* [**ClassicAssist**](https://github.com/Reetus/ClassicAssist) -
  Documentation and ClassicAssist Binary!
 
 ## Other Resources and Links
