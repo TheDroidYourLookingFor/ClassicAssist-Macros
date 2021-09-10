@@ -25,6 +25,8 @@ Scripts for ClassicAssist, an Ultima Online Assistant.
  Documentation and ClassicAssist Binary!
 
 ## Other Resources and Links
+* [UOSteam to ClassicAssist converter](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macro-Converter)
+* [UOSteam Macro Library](https://github.com/her/uosteam)
 
 ### Documentation and Guides
 
