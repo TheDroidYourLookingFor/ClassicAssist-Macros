@@ -12,7 +12,7 @@ Scripts for ClassicAssist, an Ultima Online Assistant.
 
 * [**Profiles**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/profiles) - Import profiles into UOSteam for a quick start
 
-* [**PvM+PvP**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/pvmpvp) -
+* [**PvM+PvP**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/PvX) -
  Defense, Offense, Hunting
 
 * [**Resource**](https://github.com/TheDroidYourLookingFor/ClassicAssist-Macros/tree/master/resource) -
