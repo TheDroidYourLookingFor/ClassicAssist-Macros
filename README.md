@@ -42,7 +42,7 @@ Scripts for ClassicAssist, an Ultima Online Assistant.
 This is a repository to preserve the work that has been done
 creating these scripts.
 
-UOSteam is a closed source assistant that is not allowed
+ClassicAssist is a open source assistant that is not allowed
 on every UO server. Using this assistant where prohibited
 may result in bans, item and character loss. Use at your
 own risk!
