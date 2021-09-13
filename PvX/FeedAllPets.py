@@ -1,20 +1,28 @@
-#Pet List
-if not ListExists('PetList'):
-  CreateList('PetList')
-  #add an entry for each pet you use:
-  PushList('PetList', '0x64296c3') # A
-  PushList('PetList', '0x623968b') # B
-  
-# Feed Pets in List
-for i in 'PetList':
-  if FindObject(List('PetList[i]')):
-    if Graphic('Found' == 0x2f0):
-      Feed(List('PetList[i]'), '0x78', 'any', 1)
-      HeadMsg('Feeding Pet')
-      Pause(750)
-    else:
-      Feed(List('PetList[i]'), 'Meat', 'any', 1)
-      HeadMsg('Feeding Pet Meat')
-      Pause(750)
+# Author: TheDroidUrLookingFor
 
+from System import Array
+
+# Script variables configuration
+MeatGraphic = 0x9f1
+VegGraphic = 0xc78
+# Pet List
+pets = []
+pets.Add(0x0000000) # Pet One
+pets.Add(0x0000000) # Pet Two
+
+#Heal Pets
+def feed_pets():
+    for curpet in pets:
+        if InRange(curpet, 1):
+            if Graphic(curpet) == 0x115:
+                Feed(curpet, VegGraphic)
+                HeadMsg('Feed: ' + Name(curpet), curpet)
+                Pause(750)
+            else:
+            	HeadMsg('Feed: ' + Name(curpet), curpet)
+                Feed(curpet, MeatGraphic)
+                Pause(750)
+
+
+feed_pets()
 HeadMsg('Done feeding all pets in the list!', 1998)
