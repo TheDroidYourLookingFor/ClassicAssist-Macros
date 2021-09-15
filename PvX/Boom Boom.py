@@ -43,7 +43,7 @@ if TargetExists("Harmful"):
     Target('enemy')
 
 
-def cast_harmful(spelltocast):
+def cast_rotation():
     if InRange('enemy', 1):
         HeadMsg(">> " + spells[0].name + " <<", 'enemy')
         Cast(spells[0].name)
@@ -53,11 +53,29 @@ def cast_harmful(spelltocast):
 
     else:
         if InRange('enemy', 10):
-            HeadMsg(">> " + spells[spelltocast].name + " <<", 'enemy')
-            Cast(spells[spelltocast].name)
-            WaitForTargetOrFizzle(spells[spelltocast].delay_in_ms + wait_for_target_milliseconds)
+            HeadMsg(">> " + spells[1].name + " <<", 'enemy')
+            Cast(spells[1].name)
+            WaitForTargetOrFizzle(spells[1].delay_in_ms + wait_for_target_milliseconds)
             Target('enemy')
-            Pause((spells[spelltocast].delay_in_ms + ping) - (faster_cast_recovery * 100))
+            Pause((spells[1].delay_in_ms + ping) - (faster_cast_recovery * 100))
+        if InRange('enemy', 10):
+            HeadMsg(">> " + spells[7].name + " <<", 'enemy')
+            Cast(spells[7].name)
+            WaitForTargetOrFizzle(spells[7].delay_in_ms + wait_for_target_milliseconds)
+            Target('enemy')
+            Pause((spells[7].delay_in_ms + ping) - (faster_cast_recovery * 100))
+        if InRange('enemy', 10):
+            HeadMsg(">> " + spells[6].name + " <<", 'enemy')
+            Cast(spells[6].name)
+            WaitForTargetOrFizzle(spells[6].delay_in_ms + wait_for_target_milliseconds)
+            Target('enemy')
+            Pause((spells[6].delay_in_ms + ping) - (faster_cast_recovery * 100))
+        if InRange('enemy', 10):
+            HeadMsg(">> " + spells[4].name + " <<", 'enemy')
+            Cast(spells[4].name)
+            WaitForTargetOrFizzle(spells[4].delay_in_ms + wait_for_target_milliseconds)
+            Target('enemy')
+            Pause((spells[4].delay_in_ms + ping) - (faster_cast_recovery * 100))
 
 
-cast_harmful(7)
+cast_rotation()

@@ -3,6 +3,8 @@ ping = 400
 faster_casting = 5
 faster_cast_recovery = 6
 wait_for_target_milliseconds = 2000
+AutoMode = True
+spell_target = ''
 
 
 class SpellInfo:
@@ -14,7 +16,6 @@ class SpellInfo:
         self.delay_in_ms = delay_in_ms
 
 
-# Set mana and spell cast according to your stats
 spells = [
     # 0
     SpellInfo('Harm', 6, 0, 750),
@@ -34,30 +35,32 @@ spells = [
     SpellInfo('Flame strike', 40, 67, 2000),
 ]
 
+if FindAlias('Enemy'):
+	UnsetAlias('Enemy')
+
 if not FindAlias('Enemy'):
-    HeadMsg('Select our enemy')
-    PromptAlias('enemy')
-    SetEnemy("enemy")
+	if AutoMode:
+		spell_target = GetEnemy(['Murderer', 'Enemy', 'criminal', 'gray'], 'Any', 'Closest')
+		SetAlias("enemy", spell_target)
+	else:
+	    HeadMsg('Select our enemy')
+	    PromptAlias('enemy')
+	    SetEnemy("enemy")
+	    spell_target = 'enemy'
 
 if TargetExists("Harmful"):
     Target('enemy')
 
 
 def cast_harmful(spelltocast):
-    if InRange('enemy', 1):
-        HeadMsg(">> " + spells[0].name + " <<", 'enemy')
-        Cast(spells[0].name)
-        WaitForTargetOrFizzle(spells[0].delay_in_ms + wait_for_target_milliseconds)
-        Target('enemy')
-        Pause((spells[0].delay_in_ms + ping) - (faster_cast_recovery * 100))
+	global spell_target
 
-    else:
-        if InRange('enemy', 10):
-            HeadMsg(">> " + spells[spelltocast].name + " <<", 'enemy')
-            Cast(spells[spelltocast].name)
-            WaitForTargetOrFizzle(spells[spelltocast].delay_in_ms + wait_for_target_milliseconds)
-            Target('enemy')
-            Pause((spells[spelltocast].delay_in_ms + ping) - (faster_cast_recovery * 100))
+	if InRange(spell_target, 10):
+		HeadMsg(">> " + spells[spelltocast].name + " <<", spell_target)
+		Cast(spells[spelltocast].name)
+		WaitForTargetOrFizzle(spells[spelltocast].delay_in_ms + wait_for_target_milliseconds)
+		Target(spell_target)
+		Pause((spells[spelltocast].delay_in_ms + ping) - (faster_cast_recovery * 100))
 
 
-cast_harmful(6)
+cast_harmful(5)

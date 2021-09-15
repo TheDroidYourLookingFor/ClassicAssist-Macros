@@ -3,24 +3,26 @@
 from System import Array
 
 # Script variables configuration
-MeatGraphic = 0x9f1
-VegGraphic = 0xc78
+if not ListExists('Pet'):
+	PlayMacro("Buddy & Pets")
 # Pet List
 pets = []
-pets.Add(0x0000000) # Pet One
-pets.Add(0x0000000) # Pet Two
+if ListExists('Pet'):
+	for j in GetList('Pet'):
+		if FindObject(j, 30):
+			pets.Add(j)
 
 #Heal Pets
 def feed_pets():
     for curpet in pets:
         if InRange(curpet, 1):
             if Graphic(curpet) == 0x115:
-                Feed(curpet, VegGraphic)
-                HeadMsg('Feed: ' + Name(curpet), curpet)
+                Feed(curpet, 0xc78)
+                HeadMsg('Feeding: ' + Name(curpet), curpet)
                 Pause(750)
             else:
-            	HeadMsg('Feed: ' + Name(curpet), curpet)
-                Feed(curpet, MeatGraphic)
+            	HeadMsg('Feeding: ' + Name(curpet), curpet)
+                Feed(curpet, 0x9f1)
                 Pause(750)
 
 

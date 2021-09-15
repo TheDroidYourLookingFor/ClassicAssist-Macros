@@ -6,18 +6,26 @@
 from Assistant import Engine
 from System import Array
 
+if not ListExists('Buddy'):
+	PlayMacro("Buddy & Pets")
+
+if not ListExists('Pet'):
+	PlayMacro("Buddy & Pets")
 #
 # Script variables configuration
 #
 # Buddy List
 buddies = []
-buddies.Add(0x0000000) # Friend One
-buddies.Add(0x0000000) # Friend Two
+if ListExists("Buddy"):
+	for i in GetList("Buddy"):
+		if FindObject(i, 30):
+			buddies.Add(i)
 # Pet List
 pets = []
-pets.Add(0x0000000) # Pet One
-pets.Add(0x0000000) # Pet Two
-pets.Add(0x0000000) # Pet Three
+if ListExists('Pet'):
+	for j in GetList('Pet'):
+		if FindObject(j, 30):
+			pets.Add(j)
 # Range
 BandAidRange = 2
 HealRange = 8
@@ -76,19 +84,20 @@ def setup_bandage_timers():
 	for j in pets:
 		if FindObject(j, 30):
 			create_timer(Name(j))
-	
-	
-def bandage_target(bandagetarget):
+
+
+def bandage_target(bandagetarget, healpct):
 	global BandAidRange
 	
-	if Timer(Name(bandagetarget)) >= bandage_reuse_time:
-		if InRange(bandagetarget, BandAidRange):
-			if FindType(0xe21, -1, "backpack"):
-				HeadMsg("Bandage: " + Name(bandagetarget), bandagetarget)
-				UseType(0xe21, -1, "backpack")
-				WaitForTarget(2000)
-				Target(bandagetarget)
-				SetTimer(Name(bandagetarget), 0)
+	if DiffHitsPercent(bandagetarget) >= healpct and InRange(bandagetarget, BandAidRange):
+		if Timer(Name(bandagetarget)) >= bandage_reuse_time:
+			if InRange(bandagetarget, BandAidRange):
+				if FindType(0xe21, -1, "backpack"):
+					HeadMsg("Bandage: " + Name(bandagetarget), bandagetarget)
+					UseType(0xe21, -1, "backpack")
+					WaitForTarget(2000)
+					Target(bandagetarget)
+					SetTimer(Name(bandagetarget), 0)
 
 
 def mage_heal(healtarget, healat, usebandaid):
@@ -99,28 +108,28 @@ def mage_heal(healtarget, healat, usebandaid):
 	
 	if not Dead(healtarget):
 		while Poisoned(healtarget) and InRange(healtarget, HealRange):
-			HeadMsg("Cure: " + Name(healtarget), healtarget)
-			Cast('Cure')
+			HeadMsg(">> " + spells[0].name + " <<", healtarget)
+			Cast(spells[0].name)
 			WaitForTargetOrFizzle(wait_for_target_milliseconds)
 			Target(healtarget)
 			Pause((spells[0].delay_in_ms + ping) - (faster_cast_recovery * 100))
 		
 		if DiffHitsPercent(healtarget) >= healat and InRange(healtarget, HealRange):
 			if BuffExists('Protection'):
-				HeadMsg("Big Heal: " + Name(healtarget), healtarget)
-				Cast('Greater Heal')
+				HeadMsg(">> " + spells[2].name + " <<", healtarget)
+				Cast(spells[2].name)
 				WaitForTargetOrFizzle(wait_for_target_milliseconds)
 				Target(healtarget)
 				Pause((spells[2].delay_in_ms + ping) - (faster_cast_recovery * 100))
 			else:
-				HeadMsg("Small Heal: " + Name(healtarget), healtarget)
-				Cast('Heal')
+				HeadMsg(">> " + spells[1].name + " <<", healtarget)
+				Cast(spells[1].name)
 				WaitForTargetOrFizzle(wait_for_target_milliseconds)
 				Target(healtarget)
 				Pause((spells[1].delay_in_ms + ping) - (faster_cast_recovery * 25))
 				
 			if usebandaid and InRange(healtarget, BandAidRange):
-				bandage_target(healtarget)
+				bandage_target(healtarget, healat)
 
 #Heal Self
 def check_self_hp():
