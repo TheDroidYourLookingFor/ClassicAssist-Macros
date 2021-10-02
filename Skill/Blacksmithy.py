@@ -1,13 +1,12 @@
-# Name: Blacksmithy training to cap
-# Description: Train Blacksmithy to cap
-# Author: TheDroidUrLookin4
-# Era: Any
+from Assistant import Engine
+from System import Array
 
-Blacksmithy_cap = SkillCap('Blacksmithy')
 ping = 800
+CurrentTongs = ''
+SmeltItems = []
 
 
-class ItemInfo:
+class BSRecipeInfo:
 
     def __init__(self, name, min_skill, gump1, gump2, item_type):
         self.name = name
@@ -15,53 +14,127 @@ class ItemInfo:
         self.gump1 = gump1
         self.gump2 = gump2
         self.item_type = item_type
-        self.target = target
 
 
-if Skill('Blacksmithy') < 35:
-    HeadMsg('Buy more skill!')
-    Stop()
+BSRecipes = [
+    BSRecipeInfo('Mace', 40, 9007, 77, 0xf5c),
+    BSRecipeInfo('Maul', 45, 9007, 78, 0x143b),
+    BSRecipeInfo('Cutlass', 50, 9004, 44, 0x1441),
+    BSRecipeInfo('Katana', 55, 9004, 46, 0x13ff),
+    BSRecipeInfo('Scimitar', 59.5, 9004, 49, 0x13b6),
+    BSRecipeInfo('Circlet', 90, 9010, 104, 0x2b6e),
+    BSRecipeInfo('Boomerang', 100.1, 9009, 208, 0x4067),
+]
 
-if FindType(0x13e3, 0, 'backpack'):
-    SetAlias('Hammer', 'found')
-    UnsetAlias('found')
-else:
-    HeadMsg("Need a Smith Hammer")
-    Stop()
 
-while Skill('Blacksmithy') < Blacksmithy_cap:
-    # Set according to your server stats
-    items = [
-        KegInfo('Cutlas', 43, 43, 9, 0x1441),
-        KegInfo('Scimitar', 47, 43, 44, 0x13b6),
-        KegInfo('Kryss', 52, 43, 30, 0x1401),
-        KegInfo('Katana', 60, 43, 23, 0x13ff),
-        KegInfo('Short Spear', 95, 57, 16, 0x1403),
-        KegInfo('Plate Gorget', 100, 22, 16, 0x1413),
-    ]
+for smeltitem in BSRecipes:
+	if smeltitem.item_type not in SmeltItems:
+		SmeltItems.Add(smeltitem.item_type)
+                
+def SmeltAllItems():
+    global CurrentTongs
+    
+    for i in SmeltItems:
+        while FindType(i, -1, 'backpack'):
+            if not GumpExists(0x1cc) and FindObject(CurrentTongs, -1, 'backpack'):
+                UseObject(CurrentTongs)
+                Pause(250)
+            else:
+                CreateTongs()
+                UseObject(CurrentTongs)
+                Pause(250)
 
-    current_item = None
+            if FindType(i, -1, 'backpack'):
+                ReplyGump(0x1cc, 7000)
+                WaitForTarget(5000)
+                Target('found')
+                WaitForGump(0x1cc, 5000)
+                Pause(250)
 
-    for item in items:
-        if item.min_skill <= Skill('Blacksmithy'):
-            current_item = item
+    if GumpExists(0x1cc):
+        ReplyGump(0x1cc, 0)
+        Pause(250)
 
-    if FindType(0x13e3, 0, 'backpack'):
+
+def CreateBlackSmithItem(amount, page, itemnum):
+    global CurrentTongs
+
+    for i in range(amount):
+        if FindType(0xfbc, -1, 'backpack') and FindObject(CurrentTongs, -1, 'backpack'):
+            if not GumpExists(0x1cc) and FindObject(CurrentTongs, -1, 'backpack'):
+                UseObject(CurrentTongs)
+                Pause(250)
+            else:
+                CreateTongs()
+                UseObject(CurrentTongs)
+                Pause(250)
+
+            ReplyGump(0x1cc, page)
+            WaitForGump(0x1cc, 5000)
+            ReplyGump(0x1cc, itemnum)
+            WaitForGump(0x1cc, 5000)
+            Pause(1000)
+            UnsetAlias('found')
+
+    if GumpExists(0x1cc):
+        ReplyGump(0x1cc, 0)
+        Pause(250)
+
+
+def CreateTongs():
+    global CurrentTongs
+
+    if not FindType(0xfbc, -1, "backpack"):
+        if FindType(0x1eb9, -1, 'backpack'):
+            HeadMsg('Creating Tongs', 'self')
+            UseObject('found')
+            Pause(250)
+            ReplyGump(0x1cc, 20)
+            WaitForGump(0x1cc, 2000)
+            ReplyGump(0x1cc, 0)
+            Pause(1000)
+            UnsetAlias('found')
+        else:
+            HeadMsg('Out of Tinkers Tools', 'self')
+            Stop()
+
+    if FindType(0xfbc, -1, "backpack") and not FindObject(CurrentTongs, -1, 'backpack'):
+        SetAlias(CurrentTongs, 'found')
         UnsetAlias('found')
-        ReplyGump(0x38920abd, current_item.gump1)
-        WaitForGump(0x38920abd, 15000)
-        ReplyGump(0x38920abd, current_item.gump2)
-        WaitForGump(0x38920abd, 2000)
+
+
+def CreateTinkersTools():
+    if FindType(0x1eb9, -1, 'backpack'):
+        HeadMsg('Creating Tinkers Tools', 'self')
+        UseObject('found')
+        Pause(250)
+        ReplyGump(0x1cc, 11)
+        WaitForGump(0x1cc, 2000)
+        ReplyGump(0x1cc, 0)
+        Pause(1000)
     else:
-        HeadMsg("Need a Smith Hammer")
+        HeadMsg('Out of Tinkers Tools', 'self')
         Stop()
 
-    if FindType(current_item.item_type, 0x0, 'backpack'):
-        ReplyGump(0x38920abd, 14)
-        WaitForTarget(15000)
-        Target('found')
-        WaitForGump(0x38920abd, 15000)
 
-    if Skill('Blacksmithy') == Blacksmithy_cap:
-        HeadMsg('Blacksmithy complete!')
-        Stop()
+def StartTraining():
+    while Skill('Blacksmithy') < SkillCap('Blacksmithy'):
+        CreateTongs()
+        SmeltAllItems()
+
+        current_recipe = None
+        for bsrecipe in BSRecipes:
+            if bsrecipe.min_skill <= Skill('Blacksmithy'):
+                current_recipe = bsrecipe
+
+        if Skill('Blacksmithy') < 30:
+            HeadMsg('Buy more skill!')
+            Stop()
+        else:
+            CreateBlackSmithItem(10, current_recipe.gump1, current_recipe.gump2)
+
+        Pause(1000)
+
+
+SmeltAllItems()
+StartTraining()
