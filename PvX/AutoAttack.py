@@ -205,14 +205,13 @@ def Check_Stuff():
 
 
 def AuttoAttack_Startup():
-    CreateTimer('Primary')
-    CreateTimer('Secondary')
     Check_Stuff()
     AttackStuff()
     if DoAutoLoot:
         AutoLoot()
 
-
+CreateTimer('Primary')
+CreateTimer('Secondary')
 if LoopMode:
 	while not Dead('self'):
 		AuttoAttack_Startup()
