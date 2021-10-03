@@ -1,12 +1,7 @@
-# Name: Bushido Tailoring to cap
-# Description: Train Tailoring to cap
-# Author: TheDruidUrLookingFor
-# Era: Any
-
 from Assistant import Engine
 from System import Array
 
-if not FindAlias('Salvage Bag'):
+if not FindAlias('Salvage Bag') or not FindObject('Salvage Bag'):
   HeadMsg('Select your salvage bag.')
   PromptAlias('Salvage Bag')
 
@@ -42,7 +37,7 @@ TailorRecipes = [
     TailorRecipeInfo('Elven Shirt', 85, 9003, 70, 0x3175),
     TailorRecipeInfo('Gargish Cloth Arms', 100, 9007, 200, 0x405f),
     TailorRecipeInfo('Gargish Cloth Leggings', 105, 9007, 202, 0x4065),
-    TailorRecipeInfo('Gargish Cloth Chest', 110, 9007, 201, 0x4067),
+    TailorRecipeInfo('Gargish Cloth Chest', 110, 9007, 201, 0x4061),
 ]
 
 

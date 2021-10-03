@@ -14,7 +14,7 @@ MeleeSecondary = True
 CastHonor = True
 # Buff Vampiric Embrace
 # Default: True
-CastVampEmbrace = True
+CastVampEmbrace = False
 # Cast Wither in combat
 # Default: False
 CastWither = False
@@ -39,6 +39,12 @@ DoAutoLoot = False
 # Heal/Cure with Chivalry
 # Default: True
 UseChivalryHealing = True
+# Adds a delay if we are looping hte macro
+# Default: False
+LoopMode = True
+# Delay amount when looping
+# Default: True
+Loop_Delay = 1000
 
 
 def CheckHealth():
@@ -185,4 +191,5 @@ if DoAutoLoot:
     CheckInvSpace()
     AutoLoot()
 AttackStuff()
-Resync()
+if LoopMode:
+	Pause(Loop_Delay)
