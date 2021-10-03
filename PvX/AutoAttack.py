@@ -3,18 +3,17 @@
 # Author: TheDruidUrLookingFor
 # Era: Any
 
-
 SetQuietMode(True)
 # Melee Abilities
 MeleeSkill = 'Swordsmanship'
-MeleePrimary = False
-MeleeSecondary = True
+MeleePrimary = True
+MeleeSecondary = False
 # Honor before fight
 # Default: True
 CastHonor = True
 # Buff Vampiric Embrace
 # Default: True
-CastVampEmbrace = False
+CastVampEmbrace = True
 # Cast Wither in combat
 # Default: False
 CastWither = False
@@ -44,37 +43,27 @@ UseChivalryHealing = True
 LoopMode = True
 # Delay amount when looping
 # Default: True
-Loop_Delay = 1000
+Loop_Delay = 500
+Primary_Reuse = 2000
+Secondary_Reuse = 2000
+ConfidenceAt = 5
+CloseWoundsAt = 15
 
 
-def CheckHealth():
-    if UseChivalryHealing:
-        if YellowHits('self'):
-            Cast('Remove Curse', 'self')
-            Pause(1000)
-
-        if YellowHits('self'):
-            Cast('Cleanse by Fire', 'self')
-            Pause(1000)
-
-        if DiffHits('self') >= 10:
-            Cast('Confidence')
-            Pause(1000)
-
-        if DiffHits('self') >= 15:
-            Cast('Close Wounds')
-            Pause(1000)
+def create_timer(timer_name):
+    if not TimerExists(timer_name):
+        CreateTimer(timer_name)
 
 
 def FindEnemies():
-	UnsetAlias('enemy')
-	GetEnemy(['Murderer', 'Enemy', 'criminal', 'gray'], 'Any', 'Closest')
-	if not FindObject('enemy', 10):
-		UnsetAlias('enemy')
-		Stop()
+    UnsetAlias('enemy')
+    GetEnemy(['Murderer', 'Enemy', 'criminal', 'gray'], 'Any', 'Closest')
+    if not FindObject('enemy', 10):
+        UnsetAlias('enemy')
+        Stop()
 
-	FoundTarget = 'enemy'
-	return FoundTarget
+    FoundTarget = 'enemy'
+    return FoundTarget
 
 
 def HonorTarget(target):
@@ -86,41 +75,35 @@ def HonorTarget(target):
 
 
 def AttackTarget(target):
-	if CastHonor:
-		HonorTarget(target)
-	if CastConsecrate:
-		Consecrate()
-	
-	if not War('self'):
-		WarMode('on')
+    if CastHonor:
+        HonorTarget(target)
+    if CastConsecrate:
+        Consecrate()
 
-	if CastEnemyOfOne:
-		EnemyOfOne()
-	SetEnemy(target)
-	Attack(target)
-	Pause(250)
-	if CastWither:
-	    WitherArea()
-	if CastCounterAttack:
-	    CounterAttack()
-	if CastLightningStrike:
-	    LightningStrike()
-	if CastMomentumStrike:
-	    MomentumStrike()
-	if MeleePrimary and Skill(MeleeSkill) >= 70:
-	    AttackWithPrimary(target)
-	if MeleeSecondary and Skill(MeleeSkill) >= 90:
-	    AttackWithSecondary(target)
+    if not War('self'):
+        WarMode('on')
 
-
-def CheckInvSpace():
-    if Contents('backpack') >= 165:
-        HeadMsg("Nearly Full Backpack!!!!", 'self', 1987)
-
-
-def AutoLoot():
-    PlayMacro("Auto Loot")
-    Pause(1000)
+    if CastEnemyOfOne:
+        EnemyOfOne()
+    SetEnemy(target)
+    Attack(target)
+    Pause(250)
+    if CastWither:
+        WitherArea()
+    if CastCounterAttack:
+        CounterAttack()
+    if CastLightningStrike:
+        LightningStrike()
+    if CastMomentumStrike:
+        MomentumStrike()
+    if MeleePrimary and Skill(MeleeSkill) >= 70 and Timer(
+            'Primary') >= Primary_Reuse:
+        AttackWithPrimary(target)
+        SetTimer('Primary', 0)
+    if MeleeSecondary and Skill(MeleeSkill) >= 90 and Timer(
+            'Secondary') >= Secondary_Reuse:
+        AttackWithSecondary(target)
+        SetTimer('Secondary', 0)
 
 
 def AttackWithPrimary(target):
@@ -179,17 +162,60 @@ def Consecrate():
 
 def AttackStuff():
     if not InRegion('town', 'self'):
-    	ClearTargetQueue()
+        #ClearTargetQueue()
         FindTarget = FindEnemies()
         AttackTarget(FindTarget)
 
 
-CheckHealth()
-if CastVampEmbrace:
-    VampEmbrace()
-if DoAutoLoot:
+def AutoLoot():
+    PlayMacro("Auto Loot")
+    Pause(1000)
+
+
+def CheckInvSpace():
+    if Contents('backpack') >= 110:
+        HeadMsg("Nearly Full Backpack!!!!", 'self', 1987)
+
+
+def CheckHealth():
+    if UseChivalryHealing:
+        if YellowHits('self'):
+            Cast('Remove Curse', 'self')
+            Pause(1000)
+
+        if YellowHits('self'):
+            Cast('Cleanse by Fire', 'self')
+            Pause(1000)
+
+        if DiffHits('self') >= ConfidenceAt:
+            Cast('Confidence')
+            Pause(1000)
+
+        if DiffHits('self') >= CloseWoundsAt:
+            Cast('Close Wounds', 'self')
+            Pause(1000)
+
+
+def Check_Stuff():
+    CheckHealth()
+    if CastVampEmbrace:
+        VampEmbrace()
+
     CheckInvSpace()
-    AutoLoot()
-AttackStuff()
+
+
+def AuttoAttack_Startup():
+    CreateTimer('Primary')
+    CreateTimer('Secondary')
+    Check_Stuff()
+    AttackStuff()
+    if DoAutoLoot:
+        AutoLoot()
+
+
 if LoopMode:
-	Pause(Loop_Delay)
+	while not Dead('self'):
+		AuttoAttack_Startup()
+		Pause(Loop_Delay)
+else:
+    AuttoAttack_Startup()
