@@ -13,7 +13,7 @@ MeleeSecondary = False
 CastHonor = True
 # Buff Vampiric Embrace
 # Default: True
-CastVampEmbrace = True
+CastVampEmbrace = False
 # Cast Wither in combat
 # Default: False
 CastWither = False
@@ -43,11 +43,14 @@ UseChivalryHealing = True
 LoopMode = True
 # Delay amount when looping
 # Default: True
-Loop_Delay = 500
+Loop_Delay = 1000
 Primary_Reuse = 2000
 Secondary_Reuse = 2000
 ConfidenceAt = 5
 CloseWoundsAt = 15
+# Do Resync()
+Do_Resync = True
+Resync_Delay = 5000
 
 if not TimerExists('Primary'):
     CreateTimer('Primary')
@@ -57,10 +60,9 @@ if not TimerExists('Secondary'):
     CreateTimer('Secondary')
     SetTimer('Secondary', Secondary_Reuse)
 
-
-def create_timer(timer_name):
-    if not TimerExists(timer_name):
-        CreateTimer(timer_name)
+if not TimerExists('Resync'):
+    CreateTimer('Resync')
+    SetTimer('Resync', Resync_Delay)
 
 
 def FindEnemies():
@@ -212,6 +214,11 @@ def Check_Stuff():
     CheckInvSpace()
 
 
+def Run_Resync():
+	if Do_Resync and Timer('Resync') >= Resync_Delay:
+		Resync()
+
+
 def AuttoAttack_Startup():
     Check_Stuff()
     AttackStuff()
@@ -223,5 +230,6 @@ if LoopMode:
     while not Dead('self'):
         AuttoAttack_Startup()
         Pause(Loop_Delay)
+        Run_Resync()
 else:
     AuttoAttack_Startup()
