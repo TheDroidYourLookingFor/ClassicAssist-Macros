@@ -38,18 +38,26 @@ DoAutoLoot = False
 # Heal/Cure with Chivalry
 # Default: True
 UseChivalryHealing = True
-# Adds a delay if we are looping hte macro
-# Default: False
-LoopMode = True
 # Delay amount when looping
-# Default: True
+# Default: 1000
 Loop_Delay = 1000
+# Delay between using melee primary
+# Default: 2000
 Primary_Reuse = 2000
+# Delay between using melee secondary
+# Default: 2000
 Secondary_Reuse = 2000
+# Missing HP to cause us to cast Confidence
+# Default: 5
 ConfidenceAt = 5
+# Missing HP to cause us to cast Close Wounds
+# Default: 15
 CloseWoundsAt = 15
-# Do Resync()
+# Do a Resync() at the end of the macro
+# Default: True
 Do_Resync = True
+# Delay between Resync() commands
+# Default: 5000
 Resync_Delay = 5000
 
 if not TimerExists('Primary'):
@@ -106,12 +114,10 @@ def AttackTarget(target):
         LightningStrike()
     if CastMomentumStrike:
         MomentumStrike()
-    if MeleePrimary and Skill(MeleeSkill) >= 70 and Timer(
-            'Primary') >= Primary_Reuse:
+    if MeleePrimary and Skill(MeleeSkill) >= 70 and Timer('Primary') >= Primary_Reuse:
         AttackWithPrimary(target)
         SetTimer('Primary', 0)
-    if MeleeSecondary and Skill(MeleeSkill) >= 90 and Timer(
-            'Secondary') >= Secondary_Reuse:
+    if MeleeSecondary and Skill(MeleeSkill) >= 90 and Timer('Secondary') >= Secondary_Reuse:
         AttackWithSecondary(target)
         SetTimer('Secondary', 0)
 
@@ -172,7 +178,6 @@ def Consecrate():
 
 def AttackStuff():
     if not InRegion('town', 'self'):
-        #ClearTargetQueue()
         FindTarget = FindEnemies()
         AttackTarget(FindTarget)
 
@@ -215,8 +220,8 @@ def Check_Stuff():
 
 
 def Run_Resync():
-	if Do_Resync and Timer('Resync') >= Resync_Delay:
-		Resync()
+    if Do_Resync and Timer('Resync') >= Resync_Delay:
+        Resync()
 
 
 def AuttoAttack_Startup():
@@ -226,10 +231,6 @@ def AuttoAttack_Startup():
         AutoLoot()
 
 
-if LoopMode:
-    while not Dead('self'):
-        AuttoAttack_Startup()
-        Pause(Loop_Delay)
-        Run_Resync()
-else:
-    AuttoAttack_Startup()
+AuttoAttack_Startup()
+Pause(Loop_Delay)
+Run_Resync()
