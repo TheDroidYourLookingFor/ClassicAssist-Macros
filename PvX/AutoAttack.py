@@ -49,6 +49,14 @@ Secondary_Reuse = 2000
 ConfidenceAt = 5
 CloseWoundsAt = 15
 
+if not TimerExists('Primary'):
+    CreateTimer('Primary')
+    SetTimer('Primary', Primary_Reuse)
+
+if not TimerExists('Secondary'):
+    CreateTimer('Secondary')
+    SetTimer('Secondary', Secondary_Reuse)
+
 
 def create_timer(timer_name):
     if not TimerExists(timer_name):
@@ -210,11 +218,10 @@ def AuttoAttack_Startup():
     if DoAutoLoot:
         AutoLoot()
 
-CreateTimer('Primary')
-CreateTimer('Secondary')
+
 if LoopMode:
-	while not Dead('self'):
-		AuttoAttack_Startup()
-		Pause(Loop_Delay)
+    while not Dead('self'):
+        AuttoAttack_Startup()
+        Pause(Loop_Delay)
 else:
     AuttoAttack_Startup()
